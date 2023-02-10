@@ -37,9 +37,6 @@ ifeq ($(BOARD_USES_QCOM_FBE_DECRYPTION),true)
 endif
 
 ifeq ($(BOARD_USES_QCOM_DECRYPTION),true)
-    # Include resetprop for prepdecrypt property setting
-    TW_INCLUDE_RESETPROP := true
-
     # Dummy file to apply post-install patch for qcom_decrypt
     include $(CLEAR_VARS)
 
@@ -47,7 +44,7 @@ ifeq ($(BOARD_USES_QCOM_DECRYPTION),true)
     LOCAL_MODULE_TAGS := optional
     LOCAL_MODULE_CLASS := ETC
     LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)/system/bin
-    LOCAL_REQUIRED_MODULES := relink_binaries relink_libraries twrp_ramdisk
+    LOCAL_REQUIRED_MODULES := relink_binaries relink_libraries resetprop twrp_ramdisk
 
     # Cannot send to TARGET_RECOVERY_ROOT_OUT since build system wipes init*.rc
     # during ramdisk creation and only allows init.recovery.*.rc files to be copied
