@@ -1,6 +1,6 @@
-# TWRP standard device files for Qualcomm SoCs
+# TWRP/SHRP device files for Qualcomm SoC on Motorola Edge 30 Ultra (eqs)
 
-This device tree is made for Qualcomm devices which need working decryption in TWRP. It includes the necessary services and prepdecrypt script so that these do not need to be included in the device tree.
+This device tree is specifically modified from stock to obtain a correct decryption in TWRP (or other recoveries derived from it, like SHRP). It includes the necessary services and prepdecrypt script so that these do not need to be included in the device tree. Modified has been done here to avoid possible (frequent...) bootloops which can happen with standard versions because of unwanted init of Keymaster 4.0/default service on stock files.
 
 ## Prerequisites
 - TWRP device tree with necessary vendor service binaries and dependencies<sup>*</sup> already included
@@ -13,8 +13,6 @@ This device tree is made for Qualcomm devices which need working decryption in T
   ```
   symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
   ```
-**NOTES:**
-- In the Android 8.1 & 9.0 trees, the binaries should be placed in the recovery ramdisk (recovery/root) in the same location as in the stock ROM, i.e. vendor/bin(/hw).
 - In Android 10+ trees, the binaries should be placed in system/bin.
 
 ## TWRP Common Decryption files
@@ -41,13 +39,6 @@ If you forget to add the above import, the build tree will add it for you if it 
 
 If for some reason these scripts do not work for you, see the [Troubleshooting/Debugging section below](https://github.com/TeamWin/android_device_qcom_twrp-common/tree/android-11#troubleshootingdebugging) and review the additional logging in the recovery.log to see where the process is failing.
 
-## Example Device Trees
-- android-8.1: [HTC U12+](https://github.com/TeamWin/android_device_htc_ime/tree/android-8.1/recovery/root)
-- android-9.0: [ASUS ROG Phone II](https://github.com/CaptainThrowback/android_device_asus_I001D/tree/android-9.0/recovery/root)
-- android-10: ASUS ROG Phone 3 ([common tree](https://github.com/TeamWin/android_device_asus_sm8250-common/tree/android-10/recovery/root)/[device tree](https://github.com/TeamWin/android_device_asus_I003D))
-- android-11: ASUS ZenFone 8 ([common tree](https://github.com/TeamWin/android_device_asus_sm8350-common/tree/android-11/recovery/root)/[device tree](https://github.com/TeamWin/android_device_asus_I006D))
-
-
 ### Using ldcheck to find dependencies
 The easiest way to find dependencies for the blobs you add from your device's vendor partition is using the ldcheck Python script. The syntax for using the script is below:
 ```
@@ -72,10 +63,6 @@ NOTE: On Android 10+ devices, additional dependencies from system/apex may be re
 For example, if you added qseecomd to your build, and you want to confirm that you have all of the necessary dependencies included for it, after the TWRP build is complete, you can run:
 ```
 cd $OUT/recovery/root
-```
-Android 8.1/9.0:
-```
-ldcheck -p sbin:vendor/lib64 -d vendor/bin/qseecomd
 ```
 Android 10+:
 ```
